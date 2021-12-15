@@ -1,7 +1,7 @@
 ---
 title: Redes 2
-created: '2021-09-04T02:15:07.541Z'
-modified: '2021-10-22T16:25:55.671Z'
+created: "2021-09-04T02:15:07.541Z"
+modified: "2021-10-22T16:25:55.671Z"
 ---
 
 # Redes 2
@@ -9,39 +9,49 @@ modified: '2021-10-22T16:25:55.671Z'
 <h2 style="color:red">Configuracion router</h2>
 
 ### Nombre del dispositivo
+
 - Router(config)# `hostname <hostname>`
 
 ### Proteger el modo EXEC (linea de consola)
+
 - Router(config)# `line console 0`
 - Router(config-line)# `password <password>`
 - Router(config-line)# `login`
 
 ### Acceso remoto seguro a Telnet/SSH
+
 - Router(config-line)# `line vty 0 4`
 - Router(config-line)# `password <password>`
 - Router(config-line)# `login`
 - Router(config-line)# `transport input {ssh | telnet`
- 
+
 ### Proteger el modo EXEC con privilegios
+
 - Router(config)# `enable secret <password>`
 
 ### Cifrar todas las contraseñas
+
 - Router(config)# `service password-encryption`
 
 ### Crear banner
+
 - Router(config)# `banner motd #¡Acceso autorizado únicamente!#`
 
 ### Guardar la configuracion
+
 - Router# `copy running-config startup-config`
 
 ### Enrutamiento estatico
-- Router(config)# `ip route <ip-destino <mascara> <ip-origen>` 
+
+- Router(config)# `ip route <ip-destino <mascara> <ip-origen>`
 
 ### Dar acceso a todas las redes (enrutamiento estatico con rutas por default)
+
 - Router(config)# `ip route 0.0.0.0 0.0.0.0 <salto>`
-- Router(config)# `ip route 0.0.0.0 0.0.0.0 <interfaz>` 
+- Router(config)# `ip route 0.0.0.0 0.0.0.0 <interfaz>`
 
 ### Enrutamiento dinamico (RIP)
+
 Routing information protocol
 Distancia administrativa = 120
 utiliza saltos como metrica
@@ -51,42 +61,51 @@ dos versiones: rip v1 y rip v2
 rip v2 si soporta VLSM
 
 ## RIP v1
+
 - Router(config)# `router rip`
 - Router(config-router)# `network <network>`
 
 ## RIP v2
+
 - Router(config)# `router rip`
 - Router(config)# `ver 2`
 - Router(config-router)# `network <network>`
 - Router(config-router)# `no auto-summary`
 
 ## EIGRP
+
 Enhanced Interior Gateway Routing Protocol [90/ métrica]
+
 - Router(config)# `router eigrp <1-65535>`
 - Router(config-router)# `network <red principal>`
 
 ### Ver tabla de enrutamiento
+
 - Router# `show ip route`
 - Router(config)# `do show ip route`
 
 ### Configurar subinterfaz
+
 - Router(config)# `int fa0/x`
 - Router(config-if)# `no shut`
 - Router(config-if)# `int fa0/x.x`
 - Router(config-subif)# `encapsulation dot1q <vlan>`
 - Router(config-subif)# `ip add <direccion> <mascara>`
- 
+
 ### Configurar interfaz serial
+
 - Router(config)# `int sex/x`
 - Router(config-if)# `no shut`
 - Router(config-if)# `ip address <ip> <mascara>`
 - Router(config-if)# `clock rate 64000`
 
 ### Configurar interfaz loopback
+
 - Router(config)# `int loopback <num>`
 - Router(config-if)# `ip add <direccion> <mascara>`
 
 ### Configurar servidor DHCP
+
 - Router(config)# `ip dhcp pool <nombre>`
 - Router(dhcp-config)# `network 10.0.0.0 255.0.0.0`
 - Router(dhcp-config)# `default-router 10.0.0.1`
@@ -95,16 +114,17 @@ Enhanced Interior Gateway Routing Protocol [90/ métrica]
 
 <h2 style="color:red">Configuracion switch</h2>
 
-Para el acceso a la administración remota de un switch, este se debe configurar 
-con una dirección IP y una máscara de subred. Recuerde que para administrar un switch 
+Para el acceso a la administración remota de un switch, este se debe configurar
+con una dirección IP y una máscara de subred. Recuerde que para administrar un switch
 desde una red remota, se lo debe configurar con un gateway predeterminado.
 
 - SVI: interfaz virtual del switch. La SVI es una interfaz virtual, no un puerto físico del switch.
 
-De manera predeterminada, el switch está configurado para que el control de la administración del 
+De manera predeterminada, el switch está configurado para que el control de la administración del
 switch se realice mediante la VLAN 1.
 
 ### Configuracion de la interfaz de administracion de un switch
+
 - switch(config)# `interface vlan 99`
 - switch(config-if)# `ip address <ip> <mask>`
 - switch(config-if)# `no shutdown`
@@ -112,14 +132,17 @@ switch se realice mediante la VLAN 1.
 - switch# `copy runnig-config startup-config`
 
 ### Configuracion del gateway predeterminado de un switch
+
 - switch(config)# `ip default-gateway <ip>`
 - switch(config)# `end`
 - switch# `copy running-config startup-config
 
 ### Verificar la configuracion de la interfaz de administracion de un switch
+
 - switch# `show ip interface brief`
 
 ### Configurar puerto como trunk
+
 - switch(config)# `int fa'/*`
 - switch(conf-if)# `switchport mode trunk`
 
@@ -127,23 +150,38 @@ switch se realice mediante la VLAN 1.
 
 <h2 style="color:red">Vlan's</h2>
 
-Las VLAN son grupos lógicos numerados a los que se pueden asignar puertos físicos. 
-Los parámetros de configuración aplicados a una VLAN también se aplican a todos los 
+Las VLAN son grupos lógicos numerados a los que se pueden asignar puertos físicos.
+Los parámetros de configuración aplicados a una VLAN también se aplican a todos los
 puertos asignados a esa VLAN.
 
 ### Crear vlan
+
 - Switch(config)# `vlan <number>`
 - Switch(config-vlan)# `name <name>`
 
 ### Asignar puertos a vlan
+
 - Switch# `configure terminal`
 - Switch(config)# `interface <id-interface>`
-> Asignar un rango de puertos: 
+  > Asignar un rango de puertos:
 - Switch(config)# `interface range <puertos>`
 - Switch(config-if-range)# `switchport mode access`
 - Switch(config-if-range)# `switchport access vlan <id-vlan>`
 - Switch(config-if-range)# `end`
 
-### Listar informacin de VLAN 
+### Listar informacin de VLAN
+
 - Switch# `show vlan brief`
+
+### Etherchannel
+
+- Switch(config)# `interface range fax/x - x`
+- Switch(config-if-range)# `shutdown`
+- Switch(config-if-range)# `channel-group 1 mode desirable`
+- Switch(config-if-range)# `no shutdown`
+- Switch(config-if-range)# `exit`
+- Switch(config)# `interface port-channel #`
+- Switch(config)# `switchport mode trunk`
+- Switch# `show interface port-channel #`
+
 ---
