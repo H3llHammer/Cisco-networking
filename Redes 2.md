@@ -50,7 +50,9 @@ modified: "2021-10-22T16:25:55.671Z"
 - Router(config)# `ip route 0.0.0.0 0.0.0.0 <salto>`
 - Router(config)# `ip route 0.0.0.0 0.0.0.0 <interfaz>`
 
-### Enrutamiento dinamico (RIP)
+## Enrutamiento dinamico
+
+### RIP
 
 Routing information protocol
 Distancia administrativa = 120
@@ -78,6 +80,14 @@ Enhanced Interior Gateway Routing Protocol [90/ métrica]
 
 - Router(config)# `router eigrp <1-65535>`
 - Router(config-router)# `network <red principal>`
+
+## OSPF
+
+Open Shortest Path First
+costo(metrica) = 10000 0000/ancho de banda en bps
+
+- Router(config)# `router ospf #`
+- Router(config-router)# `network x.x.x.x <wildcard x.x.x.x> area #
 
 ### Ver tabla de enrutamiento
 
