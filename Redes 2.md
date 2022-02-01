@@ -1,10 +1,6 @@
 ---
-title: Redes 2
-created: "2021-09-04T02:15:07.541Z"
-modified: "2021-10-22T16:25:55.671Z"
+title: Cisco Networking
 ---
-
-# Redes 2
 
 <h2 style="color:red">Configuracion router</h2>
 
@@ -23,7 +19,7 @@ modified: "2021-10-22T16:25:55.671Z"
 - Router(config-line)# `line vty 0 4`
 - Router(config-line)# `password <password>`
 - Router(config-line)# `login`
-- Router(config-line)# `transport input {ssh | telnet`
+- Router(config-line)# `transport input ssh telnet`
 
 ### Proteger el modo EXEC con privilegios
 
@@ -37,13 +33,33 @@ modified: "2021-10-22T16:25:55.671Z"
 
 - Router(config)# `banner motd #¡Acceso autorizado únicamente!#`
 
+### Verificación de configuración de interfaz
+
+- Router# `show ip interface brief`
+
+## IPv6
+
+- Router# `show ipv6 interface brief`
+
 ### Guardar la configuracion
 
 - Router# `copy running-config startup-config`
 
+### Mostrar la tabla ARP
+
+- Router# `show ip arp`
+
+### Mostrar estadísticas de todas las interfaces del dispositivo.
+
+- Router# `show interfaces`
+
+### Mostrar las estadísticas de IPv4 correspondientes a todas las interfaces de un router.
+
+- Router# `show ip interfaces`
+
 ### Enrutamiento estatico
 
-- Router(config)# `ip route <ip-destino <mascara> <ip-origen>`
+- Router(config)# `ip route <ip-destino> <mascara> <ip-origen>`
 
 ### Dar acceso a todas las redes (enrutamiento estatico con rutas por default)
 
@@ -54,13 +70,13 @@ modified: "2021-10-22T16:25:55.671Z"
 
 ### RIP
 
-Routing information protocol
-Distancia administrativa = 120
-utiliza saltos como metrica
-solo soporta 15 saltos
-solo se publican las redes directamente conectadas
-dos versiones: rip v1 y rip v2
-rip v2 si soporta VLSM
+- Routing information protocol
+- Distancia administrativa = 120
+- Utiliza saltos como metrica
+- Solo soporta 15 saltos
+- Solo se publican las redes directamente conectadas
+- Dos versiones: V1 y V2
+- RIP V2 soporta VLSM
 
 ## RIP v1
 
@@ -86,8 +102,8 @@ Enhanced Interior Gateway Routing Protocol [90/ métrica]
 Open Shortest Path First
 costo(metrica) = 10000 0000/ancho de banda en bps
 
-- Router(config)# `router ospf #`
-- Router(config-router)# `network x.x.x.x <wildcard x.x.x.x> area #
+- Router(config)# `router ospf <#>`
+- Router(config-router)# `network x.x.x.x <wildcard x.x.x.x> area <#>`
 
 ### Ver tabla de enrutamiento
 
