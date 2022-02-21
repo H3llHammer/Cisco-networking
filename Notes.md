@@ -2,6 +2,11 @@
 title: Cisco Networking
 ---
 
+### Modos de comunicacion duplex
+
+- Half-duplex - Se restringen el intercambio de datos a una dirección a la vez.
+- Full-duplex - Se permite enviar y recibir simultáneamente.
+
 <h2 style="color:red">Comandos show</h2>
 
 | Command               | Utilidad                                                               |
