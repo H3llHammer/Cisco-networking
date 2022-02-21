@@ -14,6 +14,22 @@ title: Cisco Networking
 | `show protocols`      | Verificar qué protocolos están operativos                              |
 | `show version`        | Verificar la memoria, las interfaces y las licencias del dispositivo   |
 
+### Comando debug
+
+Permite mostrar mensajes de depuracion en tiempo real
+
+supervisar el estado de mensajes de ICMP
+
+- Router# `debug ip icmp`
+
+desactivar una característica de depuración específica
+
+- Router# `no debug ip icmp`
+
+Para desactivar todos los comandos debug activos de inmediato
+
+- Router# `undebug all`
+
 <h2 style="color:red">Configuracion router</h2>
 
 ### Nombre del dispositivo
