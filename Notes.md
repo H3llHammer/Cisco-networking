@@ -55,7 +55,28 @@ title: Cisco Networking
 
 ### Verificación de configuración de interfaz
 
+Proporciona un resumen de la información clave para todas las interfaces de red de un router/switch.
+
 - Router# `show ip interface brief`
+
+### Comando show cdp neighbors
+
+Obtener información de dispositivos vecinos
+
+- Router# `show cdp neighbors`
+
+Revela la dirección IP de un dispositivo vecino
+
+- Router# `show cdp neighbors detail`
+
+Para deshabilitar CDP globalmente
+
+- Router(config)# `no cdp run`
+
+Para deshabilitar CDP en una interfaz
+
+- Router(config)# `int fa0/x`
+- Router(config-if)# `no cdp enable`
 
 ## IPv6
 
