@@ -2,6 +2,18 @@
 title: Cisco Networking
 ---
 
+<h2 style="color:red">Comandos show</h2>
+
+| Command               | Utilidad                                                               |
+| --------------------- | ---------------------------------------------------------------------- |
+| `show running-config` | Verificar la configuración actual                                      |
+| `show interfaces`     | Verificar el estado de la interfaz y ver si hay algún mensaje de error |
+| `show ip interface`   | Verificar la información de la capa 3 de una interfaz                  |
+| `show arp`            | Verificar la lista de hosts conocidos en las LAN Ethernet locales      |
+| `show ip route`       | Verificar la información de enrutamiento de la capa 3                  |
+| `show protocols`      | Verificar qué protocolos están operativos                              |
+| `show version`        | Verificar la memoria, las interfaces y las licencias del dispositivo   |
+
 <h2 style="color:red">Configuracion router</h2>
 
 ### Nombre del dispositivo
