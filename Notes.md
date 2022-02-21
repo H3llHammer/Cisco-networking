@@ -30,6 +30,14 @@ Para desactivar todos los comandos debug activos de inmediato
 
 - Router# `undebug all`
 
+### Mostrar mendajes de depuración en una terminal (virtual console)
+
+- R1# `terminal monitor`
+
+detener mensajes de depuración
+
+- R1# `terminal no monitor`
+
 <h2 style="color:red">Configuracion router</h2>
 
 ### Nombre del dispositivo
