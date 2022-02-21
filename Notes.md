@@ -29,6 +29,14 @@ title: Cisco Networking
 
 - Router(config)# `service password-encryption`
 
+### Asignar tamaño minimo a contraseña
+
+- Router(config)# `security passwords min-length 8`
+
+### limitar intentos de inicio de sesión vty durante sierto tiempo
+
+- Router(config)# `login block-for 120 attempts 3 within 60`
+
 ### Crear banner
 
 - Router(config)# `banner motd #¡Acceso autorizado únicamente!#`
@@ -56,6 +64,12 @@ title: Cisco Networking
 ### Mostrar las estadísticas de IPv4 correspondientes a todas las interfaces de un router.
 
 - Router# `show ip interfaces`
+
+### Listar servicios
+
+- Router# `show ip ports all`/`show control-plane host open-ports`
+
+### Listas de control de acceso
 
 ### Enrutamiento estatico
 
