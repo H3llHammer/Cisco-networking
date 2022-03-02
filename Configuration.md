@@ -1,13 +1,9 @@
----
-title: Cisco Networking
----
-
 ### Modos de comunicacion duplex
 
 - Half-duplex - Se restringen el intercambio de datos a una dirección a la vez.
 - Full-duplex - Se permite enviar y recibir simultáneamente.
 
-<h2 style="color:red">Comandos show</h2>
+# Comandos show
 
 | Command               | Utilidad                                                               |
 | --------------------- | ---------------------------------------------------------------------- |
@@ -43,7 +39,7 @@ detener mensajes de depuración
 
 - R1# `terminal no monitor`
 
-<h2 style="color:red">Configuracion router</h2>
+# Configuracion router
 
 ### Nombre del dispositivo
 
@@ -88,6 +84,10 @@ Proporciona un resumen de la información clave para todas las interfaces de red
 
 - Router# `show ip interface brief`
 
+IPv6
+
+- Router# `show ipv6 interface brief`
+
 ### Comando show cdp neighbors
 
 Obtener información de dispositivos vecinos
@@ -107,10 +107,6 @@ Para deshabilitar CDP en una interfaz
 - Router(config)# `int fa0/x`
 - Router(config-if)# `no cdp enable`
 
-## IPv6
-
-- Router# `show ipv6 interface brief`
-
 ### Guardar la configuracion
 
 - Router# `copy running-config startup-config`
@@ -118,10 +114,6 @@ Para deshabilitar CDP en una interfaz
 ### Mostrar la tabla ARP
 
 - Router# `show ip arp`
-
-### Mostrar estadísticas de todas las interfaces del dispositivo.
-
-- Router# `show interfaces`
 
 ### Mostrar las estadísticas de IPv4 correspondientes a todas las interfaces de un router.
 
@@ -131,13 +123,11 @@ Para deshabilitar CDP en una interfaz
 
 - Router# `show ip ports all`/`show control-plane host open-ports`
 
-### Listas de control de acceso
-
 ### Enrutamiento estatico
 
 - Router(config)# `ip route <ip-destino> <mascara> <ip-origen>`
 
-### Dar acceso a todas las redes (enrutamiento estatico con rutas por default)
+Dar acceso a todas las redes (enrutamiento estatico con rutas por default)
 
 - Router(config)# `ip route 0.0.0.0 0.0.0.0 <salto>`
 - Router(config)# `ip route 0.0.0.0 0.0.0.0 <interfaz>`
@@ -181,11 +171,6 @@ costo(metrica) = 10000 0000/ancho de banda en bps
 - Router(config)# `router ospf <#>`
 - Router(config-router)# `network x.x.x.x <wildcard x.x.x.x> area <#>`
 
-### Ver tabla de enrutamiento
-
-- Router# `show ip route`
-- Router(config)# `do show ip route`
-
 ### Configurar subinterfaz
 
 - Router(config)# `int fa0/x`
@@ -220,10 +205,20 @@ Para el acceso a la administración remota de un switch, este se debe configurar
 con una dirección IP y una máscara de subred. Recuerde que para administrar un switch
 desde una red remota, se lo debe configurar con un gateway predeterminado.
 
-- SVI: interfaz virtual del switch. La SVI es una interfaz virtual, no un puerto físico del switch.
-
 De manera predeterminada, el switch está configurado para que el control de la administración del
 switch se realice mediante la VLAN 1.
+
+- SVI: interfaz virtual del switch. La SVI es una interfaz virtual, no un puerto físico del switch.
+
+Por motivos de seguridad, se considera una buena práctica utilizar una VLAN distinta de la VLAN 1 para configurar SVI
+
+### Configurar consola
+
+- switch(config)# `line con 0`
+
+prevenir que los mensajes de consola interrumpan los comandos
+
+-switch(config-line)# `logging synchronous`
 
 ### Configuracion de la interfaz de administracion de un switch
 
@@ -236,12 +231,48 @@ switch se realice mediante la VLAN 1.
 ### Configuracion del gateway predeterminado de un switch
 
 - switch(config)# `ip default-gateway <ip>`
-- switch(config)# `end`
-- switch# `copy running-config startup-config
 
 ### Verificar la configuracion de la interfaz de administracion de un switch
 
 - switch# `show ip interface brief`
+
+### Configurar ssh
+
+1. Verificar el soport de ssh
+
+- Switch# `show ip ssh`
+
+2. Configurar el nombre de dominio IP de la red
+
+- Switch(config)# `ip domain-name <domain-name>`
+
+3. Generar pares de claves RSA.
+
+Configurar ssh version 2
+
+- Switch(config)# `ip ssh version 2`
+
+habilitar el servidor de SSH en el switch y generar un par de claves RSA
+
+- Switch(config)# `crypto key generate rsa`
+
+eliminar el par de claves RSA
+
+- Switch(config)# `crypto key zeroize rsa`
+
+Configurar la autenticación de usuario.
+
+- Switch(config)# `username <username> secret <password>`
+
+Configurar las líneas vty.
+Habilitar el protocolo SSH en las líneas vty
+
+- Switch(config)# `line vty 0 #`
+- Switch(config-line)# `transport input ssh`
+
+Requerir la autenticación local para las conexiones SSH de la base de datos local de nombres de usuario
+
+- Switch(config-line)# `login local`
 
 ### Configurar puerto como trunk
 
@@ -250,7 +281,36 @@ switch se realice mediante la VLAN 1.
 
 ---
 
-<h2 style="color:red">Vlan's</h2>
+### Mostrar default SDM template
+
+- switch# `show sdm prefer`
+
+Asignar dual-ipv4-and-ipv6 template por defecto
+
+- switch(config)# `sdm prefer dual-ipv4-and-ipv6 default`
+- switch# `reload`
+
+### Configurar velocidad de puertos y modo duplex
+
+- Switch(config-if)# `duplex <full|half|auto>`
+- Switch(config-if)# `speed <speed|auto>`
+
+### Funcion Auto-MDIX
+
+Cuando se utiliza auto-MDIX en una interfaz, la velocidad de la interfaz y el dúplex
+deben ajustarse a auto para que la función funcione correctamente.
+
+- Switch(config-if)# `mdix auto`
+
+Examinar la configuración de auto-MDIX para una interfaz específica
+
+- Switch# `show controllers ethernet-controller fa0/1 phy | include MDIX`
+
+### Mostrar la tabla de direcciónes MAC
+
+- Switch# `show mac-address-table`
+
+# Vlan's
 
 Las VLAN son grupos lógicos numerados a los que se pueden asignar puertos físicos.
 Los parámetros de configuración aplicados a una VLAN también se aplican a todos los
