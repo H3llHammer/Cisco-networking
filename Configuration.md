@@ -15,6 +15,28 @@
 | `show protocols`      | Verificar qué protocolos están operativos                              |
 | `show version`        | Verificar la memoria, las interfaces y las licencias del dispositivo   |
 
+### Filtrado de la salida de los comandos show
+
+section
+Muestra toda la sección que comienza con la expresión de filtrado.
+
+- Router# `show running-config | section line vty`
+
+include
+Incluye todas las líneas de salida que coinciden con la expresión de filtrado.
+
+- Router# `show ip interface brief | include up`
+
+exclude
+Excluye todas las líneas de salida que coinciden con la expresión de filtrado.
+
+- Router# `show ip interface brief | exclude unassigned`
+
+begin
+Muestra todas las líneas de salida de un determinado punto, empezando por la línea que coincide con la expresión de filtrado.
+
+- Router# `show ip route | begin Gateway`
+
 ### Comando debug
 
 Permite mostrar mensajes de depuracion en tiempo real
@@ -88,6 +110,10 @@ IPv6
 
 - Router# `show ipv6 interface brief`
 
+### Verificar configuracion de la interfaz
+
+- Router# `show running-config <interface>'
+
 ### Comando show cdp neighbors
 
 Obtener información de dispositivos vecinos
@@ -123,7 +149,7 @@ Para deshabilitar CDP en una interfaz
 
 - Router# `show ip ports all`/`show control-plane host open-ports`
 
-### Enrutamiento estatico
+## Enrutamiento estatico
 
 - Router(config)# `ip route <ip-destino> <mascara> <ip-origen>`
 
