@@ -100,6 +100,16 @@ detener mensajes de depuración
 
 - Router(config)# `banner motd #¡Acceso autorizado únicamente!#`
 
+### Comando history
+
+Por defecto, el historial de comandos está activado y el sistema captura las últimas 10 líneas de comandos en su memoria histórica.
+
+- Router# `show history`
+
+Aumentar el número de líneas de comandos que el buffer histórico registra sólo durante la sesión de terminal actual.
+
+- Router# `terminal history size <#>`
+
 ### Verificación de configuración de interfaz
 
 Proporciona un resumen de la información clave para todas las interfaces de red de un router/switch.
