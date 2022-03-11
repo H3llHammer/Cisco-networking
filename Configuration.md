@@ -310,12 +310,33 @@ Requerir la autenticación local para las conexiones SSH de la base de datos loc
 
 - Switch(config-line)# `login local`
 
-### Configurar puerto como trunk
+### Verificar la Configuración de Enlaces Troncales
 
-- switch(config)# `int fa'/*`
-- switch(conf-if)# `switchport mode trunk`
+- Switch# `show interfaces fax/x switchport`
 
----
+### Configurar puerto como enlace troncal
+
+- Switch(config)# `int fa'/*`
+- Switch(conf-if)# `switchport trunk encapsulation dot1q`
+- Switch(conf-if)# `switchport mode trunk`
+- Switch(config-if)# `switchport trunk native vlan 99`
+- Switch(config-if)# `switchport trunk allowed vlan 10,20,30,99`
+
+### Restablecer Enlace Troncal al Estado Predeterminado
+
+- Switch(config-if)# `no switchport trunk allowed vlan`
+- Switch(config-if)# `no switchport trunk native vlan`
+
+Protocolo de Enlace Troncal Dinámico (DTP, Dynamic Trunking Protocol).
+
+### Para habilitar los enlaces troncales desde un switch de Cisco hacia un dispositivo que no admite DTP:
+
+- Switch(config-if)# `switchport mode trunk`
+- Switch(config-if)# `switchport nonegotiate`
+
+### Habilitar dtp
+
+- Switch(config-if)# `switchport mode dynamic auto`
 
 ### Mostrar default SDM template
 
@@ -354,8 +375,11 @@ puertos asignados a esa VLAN.
 
 ### Crear vlan
 
-- Switch(config)# `vlan <number>`
-- Switch(config-vlan)# `name <name>`
+para crear varias vlan's
+vlan 100,102,105-107
+
+- Switch(config)# `vlan <vlan-id>`
+- Switch(config-vlan)# `name <vlan-name>`
 
 ### Asignar puertos a vlan
 
@@ -366,6 +390,17 @@ puertos asignados a esa VLAN.
 - Switch(config-if-range)# `switchport mode access`
 - Switch(config-if-range)# `switchport access vlan <id-vlan>`
 - Switch(config-if-range)# `end`
+
+Para volver a cambiar la pertenencia de un puerto a la VLAN 1 predeterminada:
+
+- Switch(config-if)# `no switchport access vlan`
+
+### Asignar puerto a vlan de voz
+
+- Switch(config-if)# `switchport mode access`
+- Switch(config-if)# `switchport access vlan 20`
+- Switch(config-if)# `mls qos trust cos`
+- Switch(config-if)# `switchport voice vlan 150`
 
 ### Listar informacin de VLAN
 
@@ -381,5 +416,3 @@ puertos asignados a esa VLAN.
 - Switch(config)# `interface port-channel #`
 - Switch(config)# `switchport mode trunk`
 - Switch# `show interface port-channel #`
-
----
