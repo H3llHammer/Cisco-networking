@@ -207,7 +207,7 @@ costo(metrica) = 10000 0000/ancho de banda en bps
 - Router(config)# `router ospf <#>`
 - Router(config-router)# `network x.x.x.x <wildcard x.x.x.x> area <#>`
 
-### Configurar subinterfaz
+### Configurar subinterfaz (Router-on-a-Stick)
 
 - Router(config)# `int fa0/x`
 - Router(config-if)# `no shut`
@@ -380,6 +380,28 @@ vlan 100,102,105-107
 
 - Switch(config)# `vlan <vlan-id>`
 - Switch(config-vlan)# `name <vlan-name>`
+
+### Crear interfaces vlan SVI (multilayer switch)
+
+- Switch(config)# `interface vlan <vlan-id>`
+- Switch(config-if)# `description <description>`
+- Switch(config-if)# `ip add <ip> <mask>`
+- Switch(config-if)# `no shut`
+
+### Asignar puertos de acceso (multilayer switch)
+
+- Switch(config)# `interface <int>x/x`
+- Switch(config-if)# `description <description>`
+- Switch(config-if)# `switchport mode access`
+- Switch(config-if)# `switchport access vlan <vlan-id>`
+
+### Habilitar enrutamiento ipv4 (multilayer switch)
+
+- Switch(config)# `ip routing`
+
+### Configurar puerto enrutado (multilayer switch)
+
+- Switch(config-if)# `no switchport`
 
 ### Asignar puertos a vlan
 
