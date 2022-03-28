@@ -310,13 +310,17 @@ Requerir la autenticación local para las conexiones SSH de la base de datos loc
 
 - Switch(config-line)# `login local`
 
+### Configurar STP (Spanning Tree Protocol)
+
+STP evita que ocurran bucles mediante la configuración de una ruta sin bucles a través de la red, con puertos “en estado de bloqueo” ubicados estratégicamente.
+
 ### Verificar la Configuración de Enlaces Troncales
 
 - Switch# `show interfaces fax/x switchport`
 
 ### Configurar puerto como enlace troncal
 
-- Switch(config)# `int fa'/*`
+- Switch(config)# `int fax/x`
 - Switch(conf-if)# `switchport trunk encapsulation dot1q`
 - Switch(conf-if)# `switchport mode trunk`
 - Switch(config-if)# `switchport trunk native vlan 99`
@@ -428,7 +432,9 @@ Para volver a cambiar la pertenencia de un puerto a la VLAN 1 predeterminada:
 
 - Switch# `show vlan brief`
 
-### Etherchannel
+## Etherchannel
+
+### Etherchannel (manual)
 
 - Switch(config)# `interface range fax/x - x`
 - Switch(config-if-range)# `shutdown`
@@ -438,3 +444,19 @@ Para volver a cambiar la pertenencia de un puerto a la VLAN 1 predeterminada:
 - Switch(config)# `interface port-channel #`
 - Switch(config)# `switchport mode trunk`
 - Switch# `show interface port-channel #`
+
+### Etherchannel (LACP)
+
+- Switch(config)# `interface range FastEthernet 0/1 - 2`
+- Switch(config-if-range)# `channel-group <number> mode active`
+- Switch(config-if-range)# `exit`
+- Switch(config-if)# `interface port-channel <number>`
+- Switch(config-if)# `switchport mode trunk`
+- Switch(config-if)# `switchport trunk allowed vlan 1,2,20`
+
+### Verificar una configuración EtherChannel
+
+- Switch# `show interfaces port-channel 1`
+- Switch# `show etherchannel summary`
+- Switch# `show etherchannel port-channel`
+- Switch# `show interfaces f0/1 etherchannel`
