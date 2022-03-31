@@ -227,11 +227,54 @@ costo(metrica) = 10000 0000/ancho de banda en bps
 - Router(config)# `int loopback <num>`
 - Router(config-if)# `ip add <direccion> <mascara>`
 
-### Configurar servidor DHCP
+## Configurar servidor DHCPv4 (Dynamic Host Configuration Protocol v4)
 
-- Router(config)# `ip dhcp pool <nombre>`
-- Router(dhcp-config)# `network 10.0.0.0 255.0.0.0`
-- Router(dhcp-config)# `default-router 10.0.0.1`
+Mostrar una lista de todos los enlaces de direcciones IPv4 a direcciones MAC proporcionados por el servicio DHCPv4.
+
+- Router# `show ip dhcp binding`
+
+Deshabilitar dhcp
+
+- Router(config)# `no service dhcp`
+
+### Excluir direcciones IPv4
+
+- Router(config)# `ip dhcp excluded-address low-address [high-address]`
+
+### Definir un nombre de Pool DHCPv4
+
+- Router(config)# `ip dhcp pool <pool-name>`
+
+### Configuar el Pool DHCPv4
+
+#### Definir el rango de direcciones disponibles
+
+- Router(dhcp-config)# `network network-number [mask | /prefix-length]`
+
+#### Definir la puerta de enlace por defecto del router.
+
+Típicamente, la puerta de enlace es la interfaz LAN del router más cercana a los dispositivos del cliente.
+Se requiere una puerta de enlace, pero puedes listar hasta ocho direcciones si hay varias puertas de enlace.
+
+- Router(dhcp-config)# `default-router address [ address2….address8]`
+
+#### Definir un servidor DNS
+
+- Router(dhcp-config)# `dns-server address [ address2…address8]`
+
+#### Definir el nombre de dominio
+
+- Router(dhcp-config)# `domain-name domain`
+
+#### Definir la duración de la concesión DHCP.
+
+- Router(dhcp-config)# `lease {days [hours [ minutes]] | infinite}`
+
+## Configurar router como cliente DHCPv4
+
+configurar una interfaz Ethernet como cliente DHCP
+
+- Router(config-if)# `ip address dhcp`
 
 ---
 
