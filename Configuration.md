@@ -276,9 +276,100 @@ configurar una interfaz Ethernet como cliente DHCP
 
 - Router(config-if)# `ip address dhcp`
 
+El método SLAAC permite a los hosts crear su propia dirección unicast global IPv6 sin los servicios de un servidor DHCPv6.
+
+## Comandos de Verificación Servidor DHCPv6
+
+- Router# `show ipv6 dhcp pool`
+
+- Router# show `ipv6 dhcp binding`
+
+## Configurar Relay Agent DHCPv6
+
+- Router(config-if)# `ipv6 dhcp relay destination ipv6-address [interface-type interface-number]`
+
+## Configurar un Servidor DHCPv6 Stateless
+
+Habilitar routing IPv6.
+
+- Router(config)# `ipv6 unicast-routing`
+
+Definir nombre pool DHCPv6.
+
+- Router(config)# `ipv6 dhcp pool IPV6-STATELESS`
+
+Configurar pool DHCPv6.
+
+- Router(config-dhcpv6)# `dns-server 2001:db8:acad:1::254`
+- Router(config-dhcpv6)# `domain-name example.com`
+
+Vincular pool DHCPv6 a una interfaz.
+
+- Router(config)# `interface GigabitEthernet0/0/1`
+- Router(config-if)# `description Link to LAN`
+- Router(config-if)# `ipv6 address fe80::1 link-local`
+- Router(config-if)# `ipv6 address 2001:db8:acad:1::1/64`
+- Router(config-if)# `ipv6 nd other-config-flag`
+- Router(config-if)# `ipv6 dhcp server IPV6-STATELESS`
+- Router(config-if)# `no shut`
+
+## Configurar un Cliente DHCPv6 Stateless
+
+Habilitar routing IPv6.
+
+- Router(config)# `ipv6 unicast-routing`
+
+Configurar router cliente para crear LLA.
+
+- Router(config)# `interface g0/0/1`
+- Router(config-if)# `ipv6 enable`
+
+Configurar Router cliente para usar SLAAC.
+
+- Router(config-if)# `ipv6 address autoconfig`
+
+## Configurar un Servidor DHCPv6 Stateful
+
+Habilitar routing IPv6.
+
+- Router(config)# `ipv6 unicast-routing`
+
+Definir nombre pool DHCPv6.
+
+- Router(config)# `ipv6 dhcp pool IPV6-STATEFUL`
+
+Configurar pool DHCPv6.
+
+- R1(config-dhcpv6)# `address prefix 2001:db8:acad:1::/64`
+- R1(config-dhcpv6)# `dns-server 2001:4860:4860::8888`
+- R1(config-dhcpv6)# `domain-name example.com`
+
+Vincular pool DHCPv6 a una interfaz.
+
+- Router(config)# `interface GigabitEthernet0/0/1`
+- Router(config-if)# `description Link to LAN`
+- Router(config-if)# `ipv6 address fe80::1 link-local`
+- Router(config-if)# `ipv6 address 2001:db8:acad:1::1/64`
+- Router(config-if)# `ipv6 nd managed-config-flag`
+- Router(config-if)# `ipv6 nd prefix default no-autoconfig`
+- Router(config-if)# `ipv6 dhcp server IPV6-STATEFUL`
+
+## Configurar un Cliente DHCPv6 Stateful
+
+- Router(config)# `ipv6 unicast-routing`
+
+Configurar router cliente para crear LLA.
+
+- Router(config)# `interface g0/0/1`
+- Router(config-if)# `ipv6 enable`
+
+Configurar Router cliente para usar SLAAC.
+
+- Router(config-if)# `ipv6 address dhcp`
+
 ---
 
-<h2 style="color:red">Configuracion switch</h2>
+# Configuracion switch
 
 Para el acceso a la administración remota de un switch, este se debe configurar
 con una dirección IP y una máscara de subred. Recuerde que para administrar un switch
@@ -304,8 +395,6 @@ prevenir que los mensajes de consola interrumpan los comandos
 - switch(config)# `interface vlan 99`
 - switch(config-if)# `ip address <ip> <mask>`
 - switch(config-if)# `no shutdown`
-- switch(config-if)# `end`
-- switch# `copy runnig-config startup-config`
 
 ### Configuracion del gateway predeterminado de un switch
 
