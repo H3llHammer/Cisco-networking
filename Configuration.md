@@ -711,18 +711,15 @@ Para volver a cambiar la pertenencia de un puerto a la VLAN 1 predeterminada:
 
 ### Etherchannel (manual)
 
-- Switch(config)# `interface range fax/x - x`
 - Switch(config-if-range)# `shutdown`
 - Switch(config-if-range)# `channel-group 1 mode desirable`
 - Switch(config-if-range)# `no shutdown`
 - Switch(config-if-range)# `exit`
 - Switch(config)# `interface port-channel #`
 - Switch(config)# `switchport mode trunk`
-- Switch# `show interface port-channel #`
 
 ### Etherchannel (LACP)
 
-- Switch(config)# `interface range FastEthernet 0/1 - 2`
 - Switch(config-if-range)# `channel-group <number> mode active`
 - Switch(config-if-range)# `exit`
 - Switch(config-if)# `interface port-channel <number>`
