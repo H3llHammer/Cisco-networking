@@ -442,9 +442,152 @@ Requerir la autenticación local para las conexiones SSH de la base de datos loc
 
 - Switch(config-line)# `login local`
 
-### Configurar STP (Spanning Tree Protocol)
+### Port Security
 
-STP evita que ocurran bucles mediante la configuración de una ruta sin bucles a través de la red, con puertos “en estado de bloqueo” ubicados estratégicamente.
+1. inhabilitar puertos no utilizados mediante el comando `shutdown` a cada interfaz o a un rango de interfaces.
+2. Mitigar desbordamiento en la tabla de dirrecciones MAC mediante Port Security(solo se puede configurar en puertos de acceso o trunks configurados manualmente)
+
+   - Switch(config-if)# `switchport mode access`
+   - Switch(config-if)# `switchport port-security`
+
+   Mostrar la configuración de port security
+
+   - Switch# `show port-security interface <interface>`
+   - Switch# `show port-security address`
+
+   Asignar un máximo de direcciones MAC permitidas en un puerto
+
+   - Switch(config-if)# `switchport port-security maximum <value>`
+
+   Configurar como el switch aprendera las direcciones MAC en un puerto seguro
+
+   Manually Configured | Configuración manual
+
+   - Switch(config-if)# `switchport port-security mac-address <mac-address>`
+
+   Dynamically Learned | Aprendisaje Dinamico
+
+   Cuando se ingresa el comando switchport port-security, la MAC origen actual para el dispositivo
+   conectado al puerto se asegura automáticamente pero no se agrega a la configuración de inicio/startup
+
+   Dynamically Learned – Sticky | Aprendisaje dinamico - adherente
+
+   Habilitar el switch para que aprenda dinámicamente la dirección MAC y la «pegue/stick» a la configuración en ejecución/running
+
+   - Switch(config-if)# `switchport port-security mac-address sticky`
+
+#### Port Security Aging
+
+    Habilitar/deshabilitar el envejecimiento estático para el puerto seguro,
+    o para establecer el tiempo o el tipo de vencimiento.
+
+    - Switch(config-if)# `switchport port-security aging { static | time time | type {absolute | inactivity}}`
+
+#### Pasos para mitigar ataques Salto de VLAN (VLAN Hopping)
+
+1. Deshabilitar las negociaciones de DTP en puertos que no sean troncales mediante el comando de configuración de la interfaz
+   `switchport mode access`
+
+2. Deshabilitar los puertos no utilizados y colócarlos en una VLAN no utilizada.
+
+3. Activar manualmente el enlace troncal en un puerto trunking utilizando el comando `switchport mode trunk`
+
+4. Deshabilitar las negociaciones de DTP en los puertos troncales mediante el comando `switchport nonegotiate`
+
+5. Establecer la VLAN nativa en otra VLAN que no sea la VLAN 1 mediante el comando `switchport trunk native vlan <vlan_number>`
+
+### Port Security: Modos de Violación de Seguridad
+
+    Si la dirección MAC de un dispositivo conectado al puerto difiere de la lista de direcciones seguras,
+    entonces ocurre una violación de puerto. El puerto entra en el estado de error-disabled de manera predeterminada.
+
+    - Switch(config-if)# `switchport port-security violation { protect | restrict | shutdown}`
+
+    Puertos en Estado error-disabled
+
+    Para volver a habilitar el puerto, primero use el comando `shutdown`, luego usa el comando `no shutdown`
+    para que el puerto sea operativo.
+
+### Imprementar DHCP Snooping
+
+Verificar el DHCP snooping
+
+- Switch# `show ip dhcp snooping`
+
+Ver los clientes que han recibido información del DHCP
+
+- Switch# `show ip dhcp snooping binding`
+
+- Switch(config)# `ip dhcp snooping`
+
+En puertos de confianza, usa el comando de configuración de interfaz
+
+- Switch(conf-if)# `ip dhcp snooping trust`
+
+Limitar la cantidad de mensajes de descubrimiento/Discovery de DHCP que puede recibir por segundo en puertos no confiables
+
+- Switch(conf-if)# `ip dhcp snooping limit <rate>`
+
+Habilita DHCP snooping por VLAN, o por un rango de VLAN
+
+- Switch(config)# `ip dhcp snooping vlan`
+
+### Configurar DAI (Dynamic ARP Inspection)
+
+Asignar DAI a puertos de confianza
+
+- Switch(conf-if)# `ip arp inspection trust`
+
+Asignar DAI a vlan's
+
+- Switch(config)# `ip arp inspection vlan <vlan>`
+
+Se utiliza para configurar DAI para descartar paquetes ARP cuando las direcciones IP no son válidas.
+Se puede usar cuando las direcciones MAC en el cuerpo de los paquetes ARP no coinciden con las direcciones
+que se especifican en el encabezado Ethernet
+
+- Switch(config)# `ip arp inspection validate {[src-mac] [dst-mac] [ip]}`
+
+### Configurar PortFast
+
+PortFast omite los estados de escucha/listening y aprendizaje/learning de STP para minimizar el tiempo que los puertos
+de acceso deben esperar a que STP converja.
+Si habilitas PortFast en un puerto que se conecta a otro switch, corres el riesgo de crear un bucle de árbol de expansión.
+
+Configurar PortFast en interfaz
+
+- Switch(conf-if)# `spanning-tree portfast`
+
+Configurar PortFast en todos los puertos de acceso
+
+- Switch(config)# `spanning-tree portfast default`
+
+### configurar BPDU Guard
+
+Aunque PortFast está habilitado, la interfaz seguirá escuchando por BPDUs
+
+Si se recibe una BPDU en un puerto de acceso habilitado para BPDU Guard, el puerto se coloca en estado error-disabled.
+Esto significa que el puerto se cierra y debe volver a habilitarse manualmente o recuperarse automáticamente mediante
+el comando global:
+
+- Switch(config)# `errdisable recovery cause psecure_violation`
+
+Habilitar BPDU Guard en una interfaz
+
+- Switch(conf-if)# `spanning-tree bpduguard enable`
+
+Habilitar BPDU Guard en puertos habilitados para PortFast
+
+- Switch(config)# `spanning-tree portfast bpduguard default`
+
+### STP (Spanning Tree Protocol)
+
+STP evita que ocurran bucles mediante la configuración de una ruta sin bucles a través de la red,
+con puertos “en estado de bloqueo” ubicados estratégicamente.
+
+Mostrar información sobre el estado del árbol de expansión
+
+- Switch# `show spanning-tree summary`
 
 ### Verificar la Configuración de Enlaces Troncales
 
@@ -517,7 +660,7 @@ vlan 100,102,105-107
 - Switch(config)# `vlan <vlan-id>`
 - Switch(config-vlan)# `name <vlan-name>`
 
-### Crear interfaces vlan SVI (multilayer switch)
+### Configurar interfaces vlan SVI (multilayer switch)
 
 - Switch(config)# `interface vlan <vlan-id>`
 - Switch(config-if)# `description <description>`
