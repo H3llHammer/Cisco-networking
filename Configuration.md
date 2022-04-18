@@ -3,6 +3,14 @@
 - Half-duplex - Se restringen el intercambio de datos a una dirección a la vez.
 - Full-duplex - Se permite enviar y recibir simultáneamente.
 
+### SNMP y RADIUS
+
+SNMP (Simple Network Management Protocol) Se trata de un protocolo para la gestión de la transferencia de información en redes,
+especialmente para uso en LAN, dependiendo de la versión elegida.
+
+RADIUS (Remote Authentication Dial In User Service) es un protocolo estándar de Internet que proporciona servicios centralizados
+de gestión de autenticación, contabilidad e IP para los usuarios de acceso remoto en una red de acceso telefónico distribuida.
+
 # Comandos show
 
 | Command               | Utilidad                                                               |
@@ -100,6 +108,19 @@ detener mensajes de depuración
 
 - Router(config)# `banner motd #¡Acceso autorizado únicamente!#`
 
+### Deshabilitar el acceso vía http
+
+- Router(config)# `no ip http server`
+
+### Evitar que los mensajes logging molesten
+
+- Router(config)# `line con 0`
+- Router(config-line)# `logging synchronous`
+- Router(config)#line aux 0
+- Router(config-line)# `logging synchronous`
+- Router(config)# `line vty 0 4`
+- Router(config-line)# `logging synchronous`
+
 ### Comando history
 
 Por defecto, el historial de comandos está activado y el sistema captura las últimas 10 líneas de comandos en su memoria histórica.
@@ -159,14 +180,61 @@ Para deshabilitar CDP en una interfaz
 
 - Router# `show ip ports all`/`show control-plane host open-ports`
 
+## Entradas en la tabla de enrutamiento
+
+![alt text](./Routing-1.png)
+![alt text](./Routing-2.png)
+
 ## Enrutamiento estatico
 
-- Router(config)# `ip route <ip-destino> <mascara> <ip-origen>`
+Mostrar el contenido de las rutas estáticas en la tabla de routing.
 
-Dar acceso a todas las redes (enrutamiento estatico con rutas por default)
+- Router# `show {ip | ipv6} route static`
 
-- Router(config)# `ip route 0.0.0.0 0.0.0.0 <salto>`
-- Router(config)# `ip route 0.0.0.0 0.0.0.0 <interfaz>`
+- Router(config)# `ip route <network-address> <subnet-mask> { ip-address | exit-intf [ip-address]} [distance]`
+
+IPV6
+
+- Router(config)# `ipv6 route ipv6-prefix/prefix-length {ipv6-address | exit-intf [ipv6-address]} [distance]`
+
+### Ruta estatica de siguiente salto
+
+- Router(config)# `ip route <red-destino> <mask> <ip-sig-salto>`
+
+### Ruta estatica conectada directamente
+
+Las rutas estáticas conectadas directamente solo deben usarse con interfaces seriales punto a punto.
+
+- Router(config)# `ip route <red-destino> <mask> <interfaz-de-salida>`
+
+### Ruta estatica completamente específicada
+
+La diferencia entre una red Ethernet de accesos múltiples y una red serial punto a punto es que esta última solo tiene un dispositivo
+más en esa red, el router que se encuentra en el otro extremo del enlace.
+
+Cuando la interfaz de salida sea una red Ethernet, se recomienda utilizar una ruta estática que incluya una dirección del siguiente
+salto. También puede usar una ruta estática completamente especificada que incluye la interfaz de salida y la dirección
+de siguiente salto.
+
+- Router(config)# `ip route <red-destino> <mask> <interfaz-de-salida> <ip-sig-salto>`
+
+### Ruta Estática por Defecto
+
+- Router(config)# `ip route 0.0.0.0 0.0.0.0 {ip-address | exit-intf}`
+
+Ruta Estática por Defecto IPv6
+
+- Router(config)# `ipv6 route ::/0 {ipv6-address | exit-intf}`
+
+### Rutas Estáticas Flotantes
+
+Las rutas estáticas flotantes son rutas estáticas que se utilizan para proporcionar una ruta de respaldo a una ruta estática
+o dinámica principal, en el caso de una falla del enlace. La ruta estática flotante se utiliza únicamente cuando la ruta principal
+no está disponible.
+Para lograrlo, la ruta estática flotante se configura con una distancia administrativa mayor que la ruta principal. La distancia administrativa representa la confiabilidad de una ruta
+
+- Router(config)# `ip route 0.0.0.0 0.0.0.0 <ip-address> <distance>`
+- Router(config)# `ipv6 route ::/0 <ipv6-address> <distance>`
 
 ## Enrutamiento dinamico
 
@@ -177,8 +245,7 @@ Dar acceso a todas las redes (enrutamiento estatico con rutas por default)
 - Utiliza saltos como metrica
 - Solo soporta 15 saltos
 - Solo se publican las redes directamente conectadas
-- Dos versiones: V1 y V2
-- RIP V2 soporta VLSM
+- Dos versiones: V1 y V2 (soporta VLSM)
 
 ## RIP v1
 
@@ -189,8 +256,6 @@ Dar acceso a todas las redes (enrutamiento estatico con rutas por default)
 
 - Router(config)# `router rip`
 - Router(config)# `ver 2`
-- Router(config-router)# `network <network>`
-- Router(config-router)# `no auto-summary`
 
 ## EIGRP
 
@@ -202,7 +267,8 @@ Enhanced Interior Gateway Routing Protocol [90/ métrica]
 ## OSPF
 
 Open Shortest Path First
-costo(metrica) = 10000 0000/ancho de banda en bps
+Costo(metrica) = 10000 0000/ancho de banda en bps
+Distancia Administrativa 110
 
 - Router(config)# `router ospf <#>`
 - Router(config-router)# `network x.x.x.x <wildcard x.x.x.x> area <#>`
