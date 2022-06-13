@@ -270,6 +270,19 @@ Open Shortest Path First
 Costo(metrica) = 10000 0000/ancho de banda en bps
 Distancia Administrativa 110
 
+- OSPF de área única: todos los routers están en un área. La mejor práctica es usar el área 0.
+- OSPF Multiárea: OSPF se implementa mediante varias áreas, de manera jerárquica.
+  Todas las áreas deben conectarse al área troncal (área 0). Los routers que interconectan las áreas se denominan «routers
+  fronterizos de área» (ABR, Area Border Routers).
+
+Listar todos los routers vecinos con los que se ha establecido una comunicación bidireccional (Base de datos de adyacencia)
+
+- Router# `show ip ospf neighbor`
+
+Mostrar información sobre todos los otros routers en la red (Base de datos de estado de enlace)
+
+- Router# `show ip ospf database`
+
 - Router(config)# `router ospf <#>`
 - Router(config-router)# `network x.x.x.x <wildcard x.x.x.x> area <#>`
 
